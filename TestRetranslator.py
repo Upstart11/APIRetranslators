@@ -104,4 +104,4 @@ for node_id in images:
         from PIL import Image
         import io
         image = Image.open(io.BytesIO(image_data))
-        image.save("result.png")
+        image.save("result1.png")
