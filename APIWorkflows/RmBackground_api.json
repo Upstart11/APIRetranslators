@@ -30,16 +30,17 @@
       "title": "Image Rembg (Remove Background)"
     }
   },
-  "117": {
+  "118": {
     "inputs": {
+      "filename_prefix": "ComfyUI",
       "images": [
         "112",
         0
       ]
     },
-    "class_type": "SaveImageWebsocket",
+    "class_type": "SaveImage",
     "_meta": {
-      "title": "SaveImageWebsocket"
+      "title": "Save Image"
     }
   }
 }
