@@ -85,7 +85,7 @@ with open("Images/4.jpg", "rb") as f:
     comfyui_path_image = upload_file(f,"",True)
 
 #load workflow from file
-with open("APIWorkflow/RmBackground_api.json", "r", encoding="utf-8") as f:
+with open("APIWorkflows/RmBackground_api.json", "r", encoding="utf-8") as f:
     workflow_data = f.read()
 
 workflow = json.loads(workflow_data)
