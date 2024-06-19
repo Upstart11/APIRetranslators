@@ -29,150 +29,72 @@ def get_history(prompt_id):
 def get_images(ws, prompt):
     prompt_id = queue_prompt(prompt)['prompt_id']
     output_images = {}
+    current_node = ""
     while True:
         out = ws.recv()
         if isinstance(out, str):
             message = json.loads(out)
             if message['type'] == 'executing':
                 data = message['data']
-                if data['node'] is None and data['prompt_id'] == prompt_id:
-                    break #Execution is done
+                if data['prompt_id'] == prompt_id:
+                    if data['node'] is None:
+                        break #Execution is done
+                    else:
+                        current_node = data['node']
         else:
-            continue #previews are binary data
-
-    history = get_history(prompt_id)[prompt_id]
-    for o in history['outputs']:
-        for node_id in history['outputs']:
-            node_output = history['outputs'][node_id]
-            if 'images' in node_output:
-                images_output = []
-                for image in node_output['images']:
-                    image_data = get_image(image['filename'], image['subfolder'], image['type'])
-                    images_output.append(image_data)
-            output_images[node_id] = images_output
+            if current_node == 'save_image_websocket_node':
+                images_output = output_images.get(current_node, [])
+                images_output.append(out[8:])
+                output_images[current_node] = images_output
 
     return output_images
 
-prompt_text = """
-{
-  "3": {
-    "inputs": {
-      "seed": 660876339117049,
-      "steps": 20,
-      "cfg": 8,
-      "sampler_name": "euler_ancestral",
-      "scheduler": "karras",
-      "denoise": 1,
-      "model": [
-        "4",
-        0
-      ],
-      "positive": [
-        "6",
-        0
-      ],
-      "negative": [
-        "7",
-        0
-      ],
-      "latent_image": [
-        "5",
-        0
-      ]
-    },
-    "class_type": "KSampler",
-    "_meta": {
-      "title": "KSampler"
-    }
-  },
-  "4": {
-    "inputs": {
-      "ckpt_name": "dreamshaper_8.safetensors"
-    },
-    "class_type": "CheckpointLoaderSimple",
-    "_meta": {
-      "title": "Load Checkpoint"
-    }
-  },
-  "5": {
-    "inputs": {
-      "width": 256,
-      "height": 128,
-      "batch_size": 1
-    },
-    "class_type": "EmptyLatentImage",
-    "_meta": {
-      "title": "Empty Latent Image"
-    }
-  },
-  "6": {
-    "inputs": {
-      "text": "beautiful scenery, winter, snow, snowy road.",
-      "clip": [
-        "4",
-        1
-      ]
-    },
-    "class_type": "CLIPTextEncode",
-    "_meta": {
-      "title": "CLIP Text Encode (Prompt)"
-    }
-  },
-  "7": {
-    "inputs": {
-      "text": "text, watermark",
-      "clip": [
-        "4",
-        1
-      ]
-    },
-    "class_type": "CLIPTextEncode",
-    "_meta": {
-      "title": "CLIP Text Encode (Prompt)"
-    }
-  },
-  "8": {
-    "inputs": {
-      "samples": [
-        "3",
-        0
-      ],
-      "vae": [
-        "4",
-        2
-      ]
-    },
-    "class_type": "VAEDecode",
-    "_meta": {
-      "title": "VAE Decode"
-    }
-  },
-  "9": {
-    "inputs": {
-      "filename_prefix": "ComfyUI",
-      "images": [
-        "8",
-        0
-      ]
-    },
-    "class_type": "SaveImage",
-    "_meta": {
-      "title": "Save Image"
-    }
-  }
-}
-"""
+def upload_file(file, subfolder="", overwrite=False):
+    try:
+        # Wrap file in formdata so it includes filename
+        body = {"image": file}
+        data = {}
+        
+        if overwrite:
+            data["overwrite"] = "true"
+  
+        if subfolder:
+            data["subfolder"] = subfolder
 
-prompt = json.loads(prompt_text)
+        resp = requests.post(f"http://{server_address}/upload/image", files=body,data=data)
+        
+        if resp.status_code == 200:
+            data = resp.json()
+            # Add the file to the dropdown list and update the widget value
+            path = data["name"]
+            if "subfolder" in data:
+                if data["subfolder"] != "":
+                    path = data["subfolder"] + "/" + path
+            
+
+        else:
+            print(f"{resp.status_code} - {resp.reason}")
+    except Exception as error:
+        print(error)
+    return path
+
+
+#upload an image
+with open("Images/4.jpg", "rb") as f:
+    comfyui_path_image = upload_file(f,"",True)
+
+#load workflow from file
+with open("APIWorkflow/RmBackground_api.json", "r", encoding="utf-8") as f:
+    workflow_data = f.read()
+
+workflow = json.loads(workflow_data)
 #set the text prompt for our positive CLIPTextEncode
-prompt["6"]["inputs"]["text"] = "beautiful scenery, summer, grass, lonly road."
+workflow["91"]["inputs"]["image"] = comfyui_path_image
 
-#set the seed for our KSampler node
-prompt["3"]["inputs"]["seed"] = 25
 
 ws = websocket.WebSocket()
 ws.connect("ws://{}/ws?clientId={}".format(server_address, client_id))
-images = get_images(ws, prompt)
+images = get_images(ws, workflow)
 
 #Commented out code to display the output images:
 
