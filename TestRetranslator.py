@@ -165,10 +165,10 @@ prompt_text = """
 
 prompt = json.loads(prompt_text)
 #set the text prompt for our positive CLIPTextEncode
-prompt["6"]["inputs"]["text"] = "masterpiece best quality man"
+prompt["6"]["inputs"]["text"] = "beautiful scenery, summer, grass, lonly road."
 
 #set the seed for our KSampler node
-prompt["3"]["inputs"]["seed"] = 5
+prompt["3"]["inputs"]["seed"] = 25
 
 ws = websocket.WebSocket()
 ws.connect("ws://{}/ws?clientId={}".format(server_address, client_id))
@@ -176,9 +176,9 @@ images = get_images(ws, prompt)
 
 #Commented out code to display the output images:
 
-# for node_id in images:
-#     for image_data in images[node_id]:
-#         from PIL import Image
-#         import io
-#         image = Image.open(io.BytesIO(image_data))
-#         image.show()
+for node_id in images:
+    for image_data in images[node_id]:
+        from PIL import Image
+        import io
+        image = Image.open(io.BytesIO(image_data))
+        image.save("result.png")
