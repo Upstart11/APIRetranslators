@@ -1,4 +1,6 @@
 import json
+import io
+from PIL import Image
 from WSConnection import getImagesFromWf, upload_file
 
 
@@ -20,4 +22,7 @@ def getresult( left, top, right, bottom):
     workflow["10"]["inputs"]["bottom"] = bottom
 
     images = getImagesFromWf(workflow)
-    return images[0]
+    for node_id in images:
+        for image_data in images[node_id]:
+            imagetr = Image.open(io.BytesIO(image_data))
+            return imagetr
