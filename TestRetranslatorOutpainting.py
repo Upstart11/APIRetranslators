@@ -94,7 +94,7 @@ with open("APIWorkflows/UncropFT_api.json", "r", encoding="utf-8") as f:
 
 workflow = json.loads(workflow_data)
 #set the text prompt for our positive CLIPTextEncode
-workflow["12"]["inputs"]["Input Image"] = comfyui_path_image
+workflow["12"]["inputs"]["LoadImage"] = comfyui_path_image
 
 
 ws = websocket.WebSocket()
