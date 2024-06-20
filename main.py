@@ -17,8 +17,6 @@ OUTPUT_PATH = Path("result2.png")
 
 app = FastAPI()
 
-class Question():
-    question: str
     
 
 @app.post("/uncrop/")
@@ -29,8 +27,9 @@ async def uncropEP(
     right: int = Form(...),
     bottom: int = Form(...)
 ):
+    uploadedImage = Image.open(io.BytesIO(file))
     # Save the uploaded file
-    responseimg = getresult(file, left, top, right, bottom)
+    responseimg = getresult(uploadedImage, left, top, right, bottom)
 
     imageToSave = Image.open(io.BytesIO(responseimg))
     imageToSave.save(OUTPUT_DIR)
