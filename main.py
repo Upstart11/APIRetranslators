@@ -9,6 +9,8 @@ from pathlib import Path
 app = FastAPI()
 
 
+INPUT_DIR = "input.png"
+INPUT_PATH = Path("input.png")
 
 OUTPUT_DIR = "result2.png"
 OUTPUT_PATH = Path("result2.png")
@@ -27,9 +29,11 @@ async def uncropEP(
     right: int = Form(...),
     bottom: int = Form(...)
 ):
+    Inputimage = Image.open(io.BytesIO(file))
+    Inputimage.save(OUTPUT_DIR)
     
     # Save the uploaded file
-    responseimg = getresult(file, left, top, right, bottom)
+    responseimg = getresult(left, top, right, bottom)
 
     imageToSave = Image.open(io.BytesIO(responseimg))
     imageToSave.save(OUTPUT_DIR)
