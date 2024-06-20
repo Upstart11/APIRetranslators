@@ -27,9 +27,9 @@ async def uncropEP(
     right: int = Form(...),
     bottom: int = Form(...)
 ):
-    uploadedImage = Image.open(io.BytesIO(file))
+    
     # Save the uploaded file
-    responseimg = getresult(uploadedImage, left, top, right, bottom)
+    responseimg = getresult(file, left, top, right, bottom)
 
     imageToSave = Image.open(io.BytesIO(responseimg))
     imageToSave.save(OUTPUT_DIR)
