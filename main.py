@@ -1,0 +1,42 @@
+from fastapi import FastAPI, HTTPException, File, UploadFile, Form
+from fastapi.responses import FileResponse
+from uncrop import getresult
+import uvicorn
+import io
+from PIL import Image
+from pathlib import Path
+
+app = FastAPI()
+
+
+
+OUTPUT_DIR = "result2.png"
+OUTPUT_PATH = Path("result2.png")
+
+
+
+app = FastAPI()
+
+class Question():
+    question: str
+    
+
+@app.post("/uncrop/")
+async def uncropEP(
+    file: UploadFile = File(...),
+    left: int = Form(...),
+    top: int = Form(...),
+    right: int = Form(...),
+    bottom: int = Form(...)
+):
+    # Save the uploaded file
+    responseimg = getresult(file, left, top, right, bottom)
+
+    imageToSave = Image.open(io.BytesIO(responseimg))
+    imageToSave.save(OUTPUT_DIR)
+
+    # Return the processed image
+    return FileResponse(OUTPUT_PATH, media_type="image/jpeg", filename=OUTPUT_PATH.name)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=3389)
