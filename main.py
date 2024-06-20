@@ -32,13 +32,13 @@ async def uncropEP(
     
     image_data = await file.read()
     Inputimage = Image.open(io.BytesIO(image_data))
-    Inputimage.save(OUTPUT_DIR)
+    Inputimage.save(INPUT_DIR)
     
     # Save the uploaded file
     responseimg = getresult(left, top, right, bottom)
 
     imageToSave = Image.open(io.BytesIO(responseimg))
-    imageToSave.save(INPUT_DIR)
+    imageToSave.save(OUTPUT_DIR)
 
     # Return the processed image
     return FileResponse(OUTPUT_PATH, media_type="image/jpeg", filename=OUTPUT_PATH.name)
