@@ -18,7 +18,4 @@ def getresult(inputimg, left, top, right, bottom):
     workflow["10"]["inputs"]["bottom"] = bottom
 
     images = getImagesFromWf(workflow)
-
-#Commented out code to display the output images:
-
     return images[0]
