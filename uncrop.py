@@ -7,7 +7,7 @@ from WSConnection import getImagesFromWf, upload_file
 
 def getresult( left, top, right, bottom, positiveprompt, negativeprompt):
 
-    with open("input.png", "rb") as f:
+    with open("Images/input.png", "rb") as f:
         comfyui_path_image = upload_file(f,"",True)
 
 
