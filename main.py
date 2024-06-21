@@ -1,6 +1,7 @@
-from fastapi import FastAPI, HTTPException, File, UploadFile, Form
+from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import FileResponse
-from uncrop import getresult
+import uncrop
+import rmBackground
 import uvicorn
 import io
 
@@ -8,8 +9,6 @@ from PIL import Image
 from pathlib import Path
 
 app = FastAPI()
-
-
 
 INPUT_FILE = "Images/input.png"
 INPUT_PATH = Path("Images/input.png")
@@ -39,7 +38,24 @@ async def uncropEP(
     Inputimage.save(INPUT_FILE)
     
     # Save the uploaded file
-    responseimg = getresult(left, top, right, bottom, positiveprompt, negativeprompt)
+    responseimg = uncrop.getresult(left, top, right, bottom, positiveprompt, negativeprompt)
+    responseimg.save(OUTPUT_FILE)
+
+    # Return the processed image
+    return FileResponse(OUTPUT_PATH, media_type="image/png", filename=OUTPUT_PATH.name)
+
+@app.post("/rmbackground/")
+async def rmBackground(
+    file: UploadFile = File(...),
+    model: str = Form(...)
+):
+
+    image_data = await file.read()
+    Inputimage = Image.open(io.BytesIO(image_data))
+    Inputimage.save(INPUT_FILE)
+    
+    # Save the uploaded file
+    responseimg = rmBackground.getresult(model)
     responseimg.save(OUTPUT_FILE)
 
     # Return the processed image
