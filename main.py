@@ -3,13 +3,12 @@ from fastapi.responses import FileResponse
 from uncrop import getresult
 import uvicorn
 import io
-import os
+
 from PIL import Image
 from pathlib import Path
 
 app = FastAPI()
 
-IMAGES_DIR = "Images"
 
 
 INPUT_FILE = "Images/input.png"
@@ -34,8 +33,6 @@ async def uncropEP(
     positiveprompt: str = Form(...),
     negativeprompt: str = Form(...)
 ):
-    if not os.path.exists(IMAGES_DIR):
-        os.makedirs(IMAGES_DIR)
 
     image_data = await file.read()
     Inputimage = Image.open(io.BytesIO(image_data))
