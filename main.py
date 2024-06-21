@@ -27,7 +27,9 @@ async def uncropEP(
     left: int = Form(...),
     top: int = Form(...),
     right: int = Form(...),
-    bottom: int = Form(...)
+    bottom: int = Form(...),
+    positiveprompt: str = Form(...),
+    negativeprompt: str = Form(...)
 ):
     
     image_data = await file.read()
@@ -35,7 +37,7 @@ async def uncropEP(
     Inputimage.save(INPUT_DIR)
     
     # Save the uploaded file
-    responseimg = getresult(left, top, right, bottom)
+    responseimg = getresult(left, top, right, bottom, positiveprompt, negativeprompt)
     responseimg.save(OUTPUT_DIR)
 
     # Return the processed image

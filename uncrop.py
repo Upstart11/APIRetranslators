@@ -5,7 +5,7 @@ from WSConnection import getImagesFromWf, upload_file
 
 
 
-def getresult( left, top, right, bottom):
+def getresult( left, top, right, bottom, positiveprompt, negativeprompt):
 
     with open("input.png", "rb") as f:
         comfyui_path_image = upload_file(f,"",True)
@@ -20,6 +20,8 @@ def getresult( left, top, right, bottom):
     workflow["10"]["inputs"]["top"] = top
     workflow["10"]["inputs"]["right"] = right
     workflow["10"]["inputs"]["bottom"] = bottom
+    workflow["6"]["inputs"]["text"] = positiveprompt
+    workflow["7"]["inputs"]["text"] = negativeprompt
 
     images = getImagesFromWf(workflow)
     for node_id in images:
