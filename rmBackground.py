@@ -16,7 +16,14 @@ def getresult(model):
 
     workflow = json.loads(workflow_data)
     workflow["91"]["inputs"]["image"] = comfyui_path_image
-    workflow["112"]["inputs"]["model"] = model
+
+    validmodels = ["u2net", "u2netp", "u2net_human_seg", "silueta", "isnet-general-use", "isnet-anime",]
+
+    if model in validmodels:
+        workflow["112"]["inputs"]["model"] = model
+    else:
+        workflow["112"]["inputs"]["model"] = "silueta"
+
 
     images = getImagesFromWf(workflow)
     for node_id in images:
