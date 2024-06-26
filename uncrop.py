@@ -11,7 +11,7 @@ def getresult( left, top, right, bottom, positiveprompt, negativeprompt):
         comfyui_path_image = upload_file(f,"",True)
 
 
-    with open("APIWorkflows/UncropFT_api.json", "r", encoding="utf-8") as f:
+    with open("APIWorkflows/Uncrop_api.json", "r", encoding="utf-8") as f:
         workflow_data = f.read()
 
     workflow = json.loads(workflow_data)

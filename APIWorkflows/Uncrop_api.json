@@ -48,7 +48,7 @@
     },
     "class_type": "CLIPTextEncode",
     "_meta": {
-      "title": "Positive Prompt"
+      "title": "Prompt"
     }
   },
   "7": {
@@ -125,7 +125,7 @@
     },
     "class_type": "LoadImage",
     "_meta": {
-      "title": "Input Image"
+      "title": "Load Image"
     }
   },
   "25": {
@@ -150,14 +150,15 @@
   },
   "26": {
     "inputs": {
+      "filename_prefix": "ComfyUI",
       "images": [
         "8",
         0
       ]
     },
-    "class_type": "SaveImageWebsocket",
+    "class_type": "SaveImage",
     "_meta": {
-      "title": "SaveImageWebsocket"
+      "title": "Save Image"
     }
   }
 }
