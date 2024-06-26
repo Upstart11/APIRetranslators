@@ -6,20 +6,37 @@ import upscale
 import qrcode
 import uvicorn
 import io
+import os
 
 from PIL import Image
 from pathlib import Path
 
 app = FastAPI()
 
-INPUT_FILE = "Images/input.png"
-INPUT_PATH = Path("Images/input.png")
+current_directory = os.path.dirname(os.path.abspath(__file__))
 
-INPUT2_FILE = "Images/input2.png"
-INPUT2_PATH = Path("Images/input2.png")
+# Get the parent directory
+parent_directory = os.path.basename(os.path.dirname(current_directory))
 
-OUTPUT_FILE = "Images/output.png"
-OUTPUT_PATH = Path("Images/output.png")
+# Check if the parent directory is named 'APIRetranslators'
+if parent_directory == "APIRetranslators":
+    INPUT_FILE = "Images/input.png"
+    INPUT_PATH = Path("Images/input.png")    
+
+    INPUT2_FILE = "Images/input2.png"
+    INPUT2_PATH = Path("Images/input2.png")
+
+    OUTPUT_FILE = "Images/output.png"
+    OUTPUT_PATH = Path("Images/output.png")
+else:
+    INPUT_FILE = "APIRetranslators/Images/input.png"
+    INPUT_PATH = Path("APIRetranslators/Images/input.png")    
+
+    INPUT2_FILE = "APIRetranslators/Images/input2.png"
+    INPUT2_PATH = Path("APIRetranslators/Images/input2.png")
+
+    OUTPUT_FILE = "APIRetranslators/Images/output.png"
+    OUTPUT_PATH = Path("APIRetranslators/Images/output.png")
 
 
 
@@ -28,8 +45,8 @@ app = FastAPI()
     
 
 @app.post("/uncrop/")
-async def uncropEP(
-    image: UploadFile = File(...), #just to test if the text will apear as documentation
+async def uncrop(
+    image: UploadFile = File(...), 
     left: int = Form(...),
     top: int = Form(...),
     right: int = Form(...),
