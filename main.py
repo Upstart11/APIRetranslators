@@ -2,6 +2,7 @@ from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import FileResponse
 import uncrop
 import rmBackground
+import upscale
 import uvicorn
 import io
 
@@ -56,6 +57,25 @@ async def rmBackground(
     
     # Save the uploaded file
     responseimg = rmBackground.getresult(model)
+    responseimg.save(OUTPUT_FILE)
+
+    # Return the processed image
+    return FileResponse(OUTPUT_PATH, media_type="image/png", filename=OUTPUT_PATH.name)
+
+@app.post("/upscale/")
+async def rmBackground(
+    file: UploadFile = File(...),
+    upscaleby: int = Form(...),
+    positiveprompt: str = Form(...),
+    negativeprompt: str = Form(...)
+):
+
+    image_data = await file.read()
+    Inputimage = Image.open(io.BytesIO(image_data))
+    Inputimage.save(INPUT_FILE)
+    
+    # Save the uploaded file
+    responseimg = upscale.getresult(upscaleby, positiveprompt, negativeprompt)
     responseimg.save(OUTPUT_FILE)
 
     # Return the processed image

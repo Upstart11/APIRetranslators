@@ -6,7 +6,7 @@
     },
     "class_type": "LoadImage",
     "_meta": {
-      "title": "Imput Image"
+      "title": "Load Image"
     }
   },
   "5": {
@@ -186,16 +186,17 @@
       "title": "Upscale Image By"
     }
   },
-  "30": {
+  "29": {
     "inputs": {
+      "filename_prefix": "ComfyUI",
       "images": [
         "14",
         0
       ]
     },
-    "class_type": "SaveImageWebsocket",
+    "class_type": "SaveImage",
     "_meta": {
-      "title": "SaveImageWebsocket"
+      "title": "Save Image"
     }
   }
 }
