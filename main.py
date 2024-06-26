@@ -45,7 +45,7 @@ app = FastAPI()
     
 
 @app.post("/uncrop/")
-async def uncrop(
+async def uncroppost(
     image: UploadFile = File(...), 
     left: int = Form(...),
     top: int = Form(...),
@@ -67,7 +67,7 @@ async def uncrop(
     return FileResponse(OUTPUT_PATH, media_type="image/png", filename=OUTPUT_PATH.name)
 
 @app.post("/rmbackground/")
-async def rmBackground(
+async def rmBackgroundpost(
     image: UploadFile = File(...),
     model: str = Form(...)
 ):
@@ -84,7 +84,7 @@ async def rmBackground(
     return FileResponse(OUTPUT_PATH, media_type="image/png", filename=OUTPUT_PATH.name)
 
 @app.post("/upscale/")
-async def upscale(
+async def upscalepost(
     image: UploadFile = File(...),
     upscaleby: int = Form(...),
     positiveprompt: str = Form(...),
@@ -103,7 +103,7 @@ async def upscale(
     return FileResponse(OUTPUT_PATH, media_type="image/png", filename=OUTPUT_PATH.name)
 
 @app.post("/qrcode/")
-async def qrcode(
+async def qrcodepost(
     qrcodeimage: UploadFile = File(...),
     refimage: UploadFile = File(...),
     weight_type: str = Form(...),
