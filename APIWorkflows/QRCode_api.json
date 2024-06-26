@@ -78,7 +78,7 @@
     },
     "class_type": "LoadImage",
     "_meta": {
-      "title": "QRCode Image"
+      "title": "QRCodeImage"
     }
   },
   "12": {
@@ -133,7 +133,7 @@
     },
     "class_type": "LoadImage",
     "_meta": {
-      "title": "Reference Image"
+      "title": "ReferenceImage"
     }
   },
   "21": {
@@ -149,7 +149,7 @@
     },
     "class_type": "ImageScale",
     "_meta": {
-      "title": "Rference Image Size"
+      "title": "RefImageToCropSize"
     }
   },
   "23": {
@@ -199,19 +199,20 @@
     },
     "class_type": "EmptyLatentImage",
     "_meta": {
-      "title": "Empty Latent Image"
+      "title": "OutputImagesize"
     }
   },
   "31": {
     "inputs": {
+      "filename_prefix": "ComfyUI",
       "images": [
         "8",
         0
       ]
     },
-    "class_type": "SaveImageWebsocket",
+    "class_type": "SaveImage",
     "_meta": {
-      "title": "SaveImageWebsocket"
+      "title": "Save Image"
     }
   }
 }

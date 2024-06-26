@@ -3,6 +3,7 @@ from fastapi.responses import FileResponse
 import uncrop
 import rmBackground
 import upscale
+import qrcode
 import uvicorn
 import io
 
@@ -13,6 +14,9 @@ app = FastAPI()
 
 INPUT_FILE = "Images/input.png"
 INPUT_PATH = Path("Images/input.png")
+
+INPUT2_FILE = "Images/input2.png"
+INPUT2_PATH = Path("Images/input2.png")
 
 OUTPUT_FILE = "Images/output.png"
 OUTPUT_PATH = Path("Images/output.png")
@@ -25,7 +29,7 @@ app = FastAPI()
 
 @app.post("/uncrop/")
 async def uncropEP(
-    file: UploadFile = File(...),
+    image: UploadFile = File(...), #just to test if the text will apear as documentation
     left: int = Form(...),
     top: int = Form(...),
     right: int = Form(...),
@@ -34,7 +38,7 @@ async def uncropEP(
     negativeprompt: str = Form(...)
 ):
 
-    image_data = await file.read()
+    image_data = await image.read()
     Inputimage = Image.open(io.BytesIO(image_data))
     Inputimage.save(INPUT_FILE)
     
@@ -47,11 +51,11 @@ async def uncropEP(
 
 @app.post("/rmbackground/")
 async def rmBackground(
-    file: UploadFile = File(...),
+    image: UploadFile = File(...),
     model: str = Form(...)
 ):
 
-    image_data = await file.read()
+    image_data = await image.read()
     Inputimage = Image.open(io.BytesIO(image_data))
     Inputimage.save(INPUT_FILE)
     
@@ -63,19 +67,42 @@ async def rmBackground(
     return FileResponse(OUTPUT_PATH, media_type="image/png", filename=OUTPUT_PATH.name)
 
 @app.post("/upscale/")
-async def rmBackground(
-    file: UploadFile = File(...),
+async def upscale(
+    image: UploadFile = File(...),
     upscaleby: int = Form(...),
     positiveprompt: str = Form(...),
     negativeprompt: str = Form(...)
 ):
 
-    image_data = await file.read()
+    image_data = await image.read()
     Inputimage = Image.open(io.BytesIO(image_data))
     Inputimage.save(INPUT_FILE)
     
     # Save the uploaded file
     responseimg = upscale.getresult(upscaleby, positiveprompt, negativeprompt)
+    responseimg.save(OUTPUT_FILE)
+
+    # Return the processed image
+    return FileResponse(OUTPUT_PATH, media_type="image/png", filename=OUTPUT_PATH.name)
+
+@app.post("/qrcode/")
+async def qrcode(
+    qrcodeimage: UploadFile = File(...),
+    refimage: UploadFile = File(...),
+    weight_type: str = Form(...),
+    qrmodelver: str = Form(...)
+):
+
+    image_data = await qrcodeimage.read()
+    Inputimage = Image.open(io.BytesIO(image_data))
+    Inputimage.save(INPUT_FILE)
+    
+    image_data2 = await refimage.read()
+    Inputimage2 = Image.open(io.BytesIO(image_data2))
+    Inputimage2.save(INPUT2_FILE)
+    
+    # Save the uploaded file
+    responseimg = qrcode.getresult(weight_type, qrmodelver)
     responseimg.save(OUTPUT_FILE)
 
     # Return the processed image
