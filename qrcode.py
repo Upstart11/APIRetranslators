@@ -1,5 +1,6 @@
 import json
 import io
+import os
 from PIL import Image
 from WSConnection import getImagesFromWf, upload_file
 
@@ -9,20 +10,30 @@ def getresult( weight_type, qrmodelver):
 
     validwt = ["linear", "ease in-out", "reverse in-out", "strong style transfer"]
 
-    with open("Images/input.png", "rb") as f:
-        comfyui_path_image = upload_file(f,"",True)
     
-    with open("Images/input2.png", "rb") as f:
+    imgdir = "APIRetranslators/Images"
+    wfdir = "APIRetranslators/APIWorkflows"
+    
+
+    if os.path.exists("Images"):
+        imgdir = "Images"
+        wfdir = "APIWorkflows"
+        
+
+    with open(os.path.join(imgdir, "input.png"), "rb") as f:
+        comfyui_path_image = upload_file(f,"",True)
+    with open(os.path.join(imgdir, "input2.png"), "rb") as f:
         comfyui_path_image2 = upload_file(f,"",True)
 
 
-    with open("APIWorkflows/Uncrop_api.json", "r", encoding="utf-8") as f:
+    with open(os.path.join(wfdir, "QRCode_api.json"), "r", encoding="utf-8") as f:
         workflow_data = f.read()
+
 
     workflow = json.loads(workflow_data)
     workflow["11"]["inputs"]["image"] = comfyui_path_image
     workflow["20"]["inputs"]["image"] = comfyui_path_image2
-    
+
     if weight_type in validwt:
         workflow["24"]["inputs"]["weight_type"] = weight_type
     else:
