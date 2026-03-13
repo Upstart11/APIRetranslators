@@ -1,0 +1,1 @@
+A FastAPI wrapper around ComfyUI workflows, exposing image processing operations as simple REST endpoints. Built to allow external tools (n8n, custom scripts, etc.) to trigger ComfyUI pipelines via HTTP without dealing with ComfyUI's native API directly.This is personal project made for accesing a remote server.
